@@ -18,9 +18,6 @@ type State = {
 };
 export default class App extends React.Component<{}, State> {
   state = { service: "none", maxHeight: 999, maxG: 9999 };
-  constructor(props: {}) {
-    super(props);
-  }
   render() {
     return (
       <Container fluid="xl">
@@ -420,7 +417,7 @@ class MercariIcon extends React.Component<Prop, {}> {
   render() {
     return (
       <Image
-        src={this.props.valid ? "mercari.webp" : "mercari_gray.webp"}
+        src={this.props.valid ? "mercari.png" : "mercari_gray.png"}
         height="32"
       />
     );
