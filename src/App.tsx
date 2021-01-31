@@ -56,7 +56,7 @@ export default class App extends React.Component<{}, State> {
             </Col>
           </Form.Row>
           <Form.Row className="mb-2">
-            <Col>最大高さで絞る</Col>
+            <Col>高さで絞る</Col>
             <Col>
               <Form.Control
                 placeholder="cm単位"
@@ -67,7 +67,7 @@ export default class App extends React.Component<{}, State> {
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col>最大重量で絞る</Col>
+            <Col>重量で絞る</Col>
             <Col>
               <Form.Control
                 placeholder="g単位"
@@ -101,9 +101,9 @@ export default class App extends React.Component<{}, State> {
                     shipping.isAvailable4Rakuma);
                 const pass_height =
                   isNaN(this.state.maxHeight) ||
-                  shipping.maxHeight <= this.state.maxHeight;
+                  shipping.maxHeight >= this.state.maxHeight;
                 const pass_g =
-                  isNaN(this.state.maxG) || shipping.g <= this.state.maxG;
+                  isNaN(this.state.maxG) || shipping.g >= this.state.maxG;
                 return pass_service && pass_height && pass_g;
               })
               .map((shipping, index) => (
