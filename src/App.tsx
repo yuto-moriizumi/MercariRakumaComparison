@@ -13,11 +13,11 @@ type Shipping = {
 };
 type State = {
   service: string;
-  maxHeight: number;
-  maxG: number;
+  height: number;
+  g: number;
 };
 export default class App extends React.Component<{}, State> {
-  state = { service: "none", maxHeight: 999, maxG: 99999 };
+  state = { service: "none", height: 0, g: 0 };
   render() {
     return (
       <Container fluid="xl">
@@ -61,7 +61,7 @@ export default class App extends React.Component<{}, State> {
               <Form.Control
                 placeholder="cm単位"
                 onChange={(e) => {
-                  this.setState({ maxHeight: parseInt(e.target.value) });
+                  this.setState({ height: parseInt(e.target.value) });
                 }}
               />
             </Col>
@@ -72,7 +72,7 @@ export default class App extends React.Component<{}, State> {
               <Form.Control
                 placeholder="g単位"
                 onChange={(e) => {
-                  this.setState({ maxG: parseInt(e.target.value) });
+                  this.setState({ g: parseInt(e.target.value) });
                 }}
               />
             </Col>
@@ -100,10 +100,10 @@ export default class App extends React.Component<{}, State> {
                   (this.state.service === "rakuma" &&
                     shipping.isAvailable4Rakuma);
                 const pass_height =
-                  isNaN(this.state.maxHeight) ||
-                  shipping.maxHeight >= this.state.maxHeight;
+                  isNaN(this.state.height) ||
+                  shipping.maxHeight >= this.state.height;
                 const pass_g =
-                  isNaN(this.state.maxG) || shipping.g >= this.state.maxG;
+                  isNaN(this.state.g) || shipping.g >= this.state.g;
                 return pass_service && pass_height && pass_g;
               })
               .map((shipping, index) => (
