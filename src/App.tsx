@@ -89,13 +89,23 @@ export default class App extends React.Component<{}, State> {
                 name="service"
                 type="radio"
                 inline
+                label="全て"
+                onClick={(_) => this.setState({ service: "none" })}
+                checked={this.state.service === "none"}
+              />
+            </Col>
+            <Col>
+              <Form.Check
+                name="service"
+                type="radio"
+                inline
                 label={
                   <>
                     <MercariIcon valid />
                     メルカリ
                   </>
                 }
-                onClick={(e) => this.setState({ service: "mercari" })}
+                onClick={(_) => this.setState({ service: "mercari" })}
               />
             </Col>
             <Col>
@@ -109,7 +119,7 @@ export default class App extends React.Component<{}, State> {
                     ラクマ
                   </>
                 }
-                onClick={(e) => this.setState({ service: "rakuma" })}
+                onClick={(_) => this.setState({ service: "rakuma" })}
               />
             </Col>
           </Form.Row>
