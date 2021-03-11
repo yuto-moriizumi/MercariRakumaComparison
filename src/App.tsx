@@ -16,14 +16,23 @@ type State = {
   height: number;
   g: number;
   sell: number;
+  merukari_select: number;
+  rakuma_select: number;
 };
 export default class App extends React.Component<{}, State> {
-  state = { service: "none", height: 0, g: 0, sell: 0 };
-  private shippings = shippings;
+  state = {
+    service: "none",
+    height: 0,
+    g: 0,
+    sell: 0,
+    merukari_select: -1,
+    rakuma_select: -1,
+  };
+  private shippings = shippings.map((shipping, index) => {
+    //配送方法の配列にインデックスを埋め込む
+    return { index: index, ...shipping };
+  });
   render() {
-    const cheapest_mercari = this.findChepestShipping("mercari");
-    const cheapest_rakuma = this.findChepestShipping("rakuma");
-
     return (
       <Container fluid="xl">
         <h1 className="mt-3 mb-3">メルカリラクマ 配送料比較表</h1>
@@ -55,26 +64,27 @@ export default class App extends React.Component<{}, State> {
                 </Form>
                 <p className="mb-1">
                   メルカリの場合：
-                  {cheapest_mercari
-                    ? cheapest_mercari.name +
+                  {this.state.merukari_select !== -1
+                    ? shippings[this.state.merukari_select].name +
                       "," +
                       Math.ceil(
-                        this.state.sell * (1 - 0.1) - cheapest_mercari.cost
+                        this.state.sell * (1 - 0.1) -
+                          shippings[this.state.merukari_select].cost
                       ) +
                       "円"
-                    : "発送困難"}
+                    : "配送方法を選択してください"}
                 </p>
                 <p>
                   ラクマの場合：
-                  {cheapest_rakuma
-                    ? cheapest_rakuma.name +
+                  {this.state.rakuma_select !== -1
+                    ? shippings[this.state.rakuma_select].name +
                       "," +
                       Math.ceil(
                         this.state.sell * (1 - 0.06 * 1.1) -
-                          cheapest_rakuma.cost
+                          shippings[this.state.rakuma_select].cost
                       ) +
                       "円"
-                    : "発送困難"}
+                    : "配送方法を選択してください"}
                 </p>
               </Card.Body>
             </Accordion.Collapse>
@@ -151,10 +161,24 @@ export default class App extends React.Component<{}, State> {
             <tr>
               <th>配送種類</th>
               <th>梱包サイズ</th>
-              <th>高さ制限</th>
-              <th>重量制限</th>
+              <th>
+                高さ
+                <br className="d-xl-none" />
+                制限
+              </th>
+              <th>
+                重量
+                <br className="d-xl-none" />
+                制限
+              </th>
               <th>送料</th>
-              <th>匿名か?</th>
+              <th>匿名?</th>
+              <th>
+                <MercariIcon />
+              </th>
+              <th>
+                <RakumaIcon />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -174,8 +198,8 @@ export default class App extends React.Component<{}, State> {
                   isNaN(this.state.g) || shipping.g >= this.state.g;
                 return pass_service && pass_height && pass_g;
               })
-              .map((shipping, index) => (
-                <tr key={index}>
+              .map((shipping) => (
+                <tr key={shipping.index}>
                   <td>
                     <MercariIcon valid={shipping.isAvailable4Mercari} />
                     <RakumaIcon valid={shipping.isAvailable4Rakuma} />
@@ -186,6 +210,30 @@ export default class App extends React.Component<{}, State> {
                   <td className="text-right">{shipping.g} g</td>
                   <td className="text-right">{shipping.cost} 円</td>
                   <td>{shipping.isAnonymous ? "匿名" : "記名"}</td>
+                  <td className="text-center">
+                    <Form.Check
+                      name="merucari_select"
+                      type="radio"
+                      inline
+                      disabled={!shipping.isAvailable4Mercari}
+                      onClick={(_) =>
+                        this.setState({ merukari_select: shipping.index })
+                      }
+                      className="mx-0"
+                    />
+                  </td>
+                  <td className="text-center">
+                    <Form.Check
+                      name="rakuma_select"
+                      type="radio"
+                      inline
+                      disabled={!shipping.isAvailable4Rakuma}
+                      onClick={(_) =>
+                        this.setState({ rakuma_select: shipping.index })
+                      }
+                      className="mx-0"
+                    />
+                  </td>
                 </tr>
               ))}
           </tbody>
@@ -211,13 +259,17 @@ export default class App extends React.Component<{}, State> {
 }
 
 type Prop = {
-  valid: boolean;
+  valid?: boolean;
 };
 class MercariIcon extends React.Component<Prop, {}> {
   render() {
     return (
       <Image
-        src={this.props.valid ? "mercari.png" : "mercari_gray.png"}
+        src={
+          this.props.valid === undefined || this.props.valid
+            ? "mercari.png"
+            : "mercari_gray.png"
+        }
         height="32"
       />
     );
@@ -228,7 +280,11 @@ class RakumaIcon extends React.Component<Prop, {}> {
   render() {
     return (
       <Image
-        src={this.props.valid ? "rakuma.png" : "rakuma_gray.png"}
+        src={
+          this.props.valid === undefined || this.props.valid
+            ? "rakuma.png"
+            : "rakuma_gray.png"
+        }
         height="32"
       />
     );
