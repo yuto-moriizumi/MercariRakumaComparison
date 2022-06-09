@@ -281,6 +281,16 @@ export const shippings: Shipping[] = [
     isAvailable4Rakuma: false,
   },
   {
+    name: 'かんたんラクマパック ゆうパケットプラス',
+    size: '縦24×横17',
+    maxHeight: 7,
+    g: 2000,
+    cost: 380+65,
+    isAnonymous: true,
+    isAvailable4Mercari: true,
+    isAvailable4Rakuma: true,
+  },
+  {
     name: 'らくらくメルカリ便 宅急便コンパクト',
     size: '縦25×横20',
     maxHeight: 5,
